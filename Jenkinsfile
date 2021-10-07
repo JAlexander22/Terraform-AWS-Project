@@ -20,5 +20,12 @@ pipeline {
         git 'https://github.com/JAlexander22/Terraform-AWS-Project.git'
       }
     }
+
+    stage('Build-Image')
+      steps {
+        script {
+          DOCKER_IMAGE = docker.build REGISTRY
+        }
+      }
   }
 }

@@ -17,7 +17,7 @@ pipeline {
 
     stage ('Cloning The Code from GIT') {
       steps {
-        git branch: 'main'
+        git branch: 'main',
         url: 'https://github.com/JAlexander22/Terraform-AWS-Project.git'
       }
     }

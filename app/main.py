@@ -1,9 +1,10 @@
-from flask import Flask, make_response, request, render_template
+from flask import Flask, make_response, request, render_template, redirect, jsonify
 from random import randrange
 import jwt
 import datetime
 from contextlib import closing
 import sqlite3
+import calculator_func
 
 #Declare the app
 flaskapp = Flask(__name__)
@@ -27,7 +28,7 @@ def verify_token(token):
         if userdata != None:
             return True
         else:
-            return falsle
+            return False
     else:
         return False
 
@@ -79,33 +80,59 @@ def authenticate_users():
             return resp
         else:
             user_token = create_token(username,password)
+            resp = make_response(redirect('/calculator'))
             resp = make_response(render_template('calculator.html'))
-            resp.set_cookie('token', user_token)
+            resp.set_cookie('token', user_token, max_age=606024*2, httponly=True, secure=True, samesite='Strict')
             return resp
 
-@flaskapp.route('/send', methods=['POST','GET'])
-def send(sum=sum):
-    print(request.cookies)
+
+
+@flaskapp.route('/logout', methods = ['GET'])
+def calculator_logout():
+    resp = make_response(redirect('/login'))
+    resp.delete_cookie('token')
+    return resp
+
+
+
+@flaskapp.route('/calculator', methods = ['GET'])
+def calculator_get():
+    isUserLoggedIn = False
+    if 'token' in request.cookies:
+        isUserLoggedIn = verify_token(request.cookies['token'])
+
+    if isUserLoggedIn:
+        return render_template("calculator.html")
+    else:
+        resp = make_response(redirect('/login'))
+        return resp
+
+
+
+
+@flaskapp.route('/calculator', methods=['POST'])
+def send():
     if request.method == 'POST':
-        num1 = request.form['num1']
-        num2 = request.form['num2']
-        operation = request.form['operation']
+        num1 = request.form.get('num1', type = int)
+        num2 = request.form.get('num2', type = int)
+        operation = request.form.get('operation')
 
-        if operation == 'add':
-            sum = float(num1) + float(num2)
-            return render_template('calculator.html', sum=sum)
-        elif operation == 'subtraction':
-            sum = float(num1) - float(num2)
-            return render_template('calculator.html', sum=sum)
-        if operation == 'multiply':
-            sum = float(num1) * float(num2)
-            return render_template('calculator.html', sum=sum)
-        elif operation == 'division':
-            sum = float(num1) / float(num2)
-            return render_template('calculator.html', sum=sum)
-        else:
-            return render_template('calculator.html')
+        result = calculator_func.process(num1, num2, operation)
+        return str(result)
 
+@flaskapp.route('/calculator2', methods= ['POST'])
+def calculator_post2():
+    number1 = request.form.get('num1', type = int)
+    number2 = request.form.get('num2', type = int)
+    operation = request.form.get('operation', type = str)
+
+    result = calculator_func.process(number1, number2, operation)
+
+    response_data = {
+        'data':result
+    }
+
+    return make_response(jsonify(response_data))
 
 
 if __name__ == '__main__':

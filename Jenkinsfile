@@ -2,7 +2,7 @@ pipeline {
 
   environment{
     PROJECT_DIR = "/app"
-    REGISTRY = "jalexander22/cal_api"
+    REGISTRY = "jalexander22/cal_api" + ":" + "$BUILD_NUMBER"
     DOCKER_CREDENTIALS = "Docker_Credentials"
     DOCKER_IMAGE = ""
   }
@@ -30,6 +30,18 @@ pipeline {
       }
     }
 
+    // stage('Testing the Code'){
+    //   steps {
+    //     script {
+    //       sh '''docker run -v $PWD/reports:/reports --workdir $PROJECT_DIR $REGISTRY pytest -v --junitxml=/reports/results.xml'''
+    //     }
+    //   }
+    //   post {
+    //     always {
+    //       junit testResults: '**/reports/*.xml'
+    //     }
+    //   }
+    // }
     stage('Deploy To Docker Hub'){
       steps{
         script{

@@ -1,13 +1,18 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title> Main Page</title>
+    <script type="text/javascript" src="/static/js/main.js">
+      //alert(`This is a message from the script in the head segment`)
+
+    </script>
+
+  </head>
   <body>
-
-    <h1>Login:</h1>
-
-    <form action = '/auth' method = 'POST'>
-      <input type = 'text' name = 'username'/>
-      <input type = 'text' name = 'password'/>
-      <input type = 'submit' value = 'login'/>
-    </form>
-
+    <h1> Welcome to the Secure Rest Calculator</h1>
+    <a href="/login">LOGIN</a>
+    <p id="paragraph_field"> This is the inital Paragraph </p>
+    <button type="button" name="btnChangeParagraph" onclick="updatedParagraph()">Click to Change the Paracgraph</button>
   </body>
 </html>

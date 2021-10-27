@@ -33,3 +33,13 @@ resource "aws_dynamodb_table" "cyber94_jalexander_cal_dynambo_table_lock_tf"{
     type = "S"
   }
 }
+
+resource "aws_dynamodb_table" "cyber94_jalexander_cal_2_dynambo_table_lock_tf"{
+  name = "cyber94_jalexander_cal_2_dynambo_table_lock"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "LockID"
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}

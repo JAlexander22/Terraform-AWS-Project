@@ -12,6 +12,7 @@ terraform {
   }
 }
 
+# @component CalcApp:VPC (#vpc)
 #Virtual Private Cloud
 resource "aws_vpc" "cyber94_jalexander_cal_vpc_tf"{
   cidr_block = "10.108.0.0/16"

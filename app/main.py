@@ -10,6 +10,8 @@ import calculator_func
 flaskapp = Flask(__name__)
 SECRET_KEY = "3D238B65CF6D68E4B6797BBEF4EC3"
 
+# @component External:Guest (#guest)
+
 # Start an app route
 def newuser(username, password):
     with closing(sqlite3.connect("users.db")) as connection:
@@ -32,9 +34,11 @@ def verify_token(token):
     else:
         return False
 
+# @component CalcApp:Web:Server:Index (#index)
+# @component #guest to #index with HTTP-GET
 @flaskapp.route('/')
 def index_page():
-    print(request.cookies)
+    print(request.headers)
     isUserLoggedIn = False
 
     if 'token' in request.cookies:
@@ -101,6 +105,7 @@ def calculator_get():
     if 'token' in request.cookies:
         isUserLoggedIn = verify_token(request.cookies['token'])
 
+
     if isUserLoggedIn:
         return render_template("calculator.html")
     else:
@@ -137,4 +142,4 @@ def calculator_post2():
 
 if __name__ == '__main__':
     print("This is a Secure REST API Server:")
-    flaskapp.run(host="0.0.0.0", debug = True, ssl_context=('cert/cert.pem', 'cert/key.pem'))
+    flaskapp.run(host = '0.0.0.0', debug = True, ssl_context=('cert/cert.pem', 'cert/key.pem'))
